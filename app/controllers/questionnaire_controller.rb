@@ -218,6 +218,9 @@ class QuestionnaireController < ApplicationController
     @questionnaire = Object.const_get(params[:questionnaire][:type]).new(params[:questionnaire])
     @participant_id = params[:pid]
     @assignment_id = params[:aid]
+
+    @questionnaire.quiz_question_type = params[:qtype]
+
     if params[:qtype] == "Multiple Choice - radio"
       render :new_quiz_mcq_radio
     elsif params[:qtype] == "Multiple Choice - checked"

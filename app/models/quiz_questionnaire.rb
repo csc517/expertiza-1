@@ -1,4 +1,7 @@
 class QuizQuestionnaire < Questionnaire
+
+    attr_accessor :quiz_question_type
+
     validates_presence_of :quiz_question_type
 
     def after_initialize
