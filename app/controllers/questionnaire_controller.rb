@@ -161,6 +161,7 @@ class QuestionnaireController < ApplicationController
   end
 
   #define a new quiz questionnaire
+  #method invoked by the view
   def new_quiz
     @questionnaire = Object.const_get(params[:model]).new
     @questionnaire.private = params[:private]
@@ -210,6 +211,24 @@ class QuestionnaireController < ApplicationController
   #seperate method for creating a quiz questionnaire because of differences in permission
   def create_quiz_questionnaire
     create_questionnaire
+  end
+
+  #render corresponding views based on quiz type
+  def create_quiz_type
+    @questionnaire = Object.const_get(params[:questionnaire][:type]).new(params[:questionnaire])
+    @participant_id = params[:pid]
+    @assignment_id = params[:aid]
+    if params[:qtype] == "Multiple Choice - radio"
+      render :new_quiz_mcq_radio
+    elsif params[:qtype] == "Multiple Choice - checked"
+        render :new_quiz_mcq_checked
+    elsif params[:qtype] == "Essay"
+        render :new_quiz_essay
+    elsif params[:qtype] == "True False"
+        render :new_quiz_true_false
+    else  #default
+      render :new_quiz_mcq_radio
+    end
   end
 
   # Modify the advice associated with a questionnaire
