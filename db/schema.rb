@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111119210421) do
+ActiveRecord::Schema.define(:version => 20121126040849) do
 
   create_table "assignment_questionnaires", :force => true do |t|
     t.integer "assignment_id"
@@ -125,6 +125,7 @@ ActiveRecord::Schema.define(:version => 20111119210421) do
     t.integer  "round"
     t.boolean  "flag",                        :default => false
     t.integer  "threshold",                   :default => 1
+    t.integer  "quiz_allowed_id"
   end
 
   add_index "due_dates", ["assignment_id"], :name => "fk_due_dates_assignments"
@@ -248,6 +249,7 @@ ActiveRecord::Schema.define(:version => 20111119210421) do
     t.boolean "true_false"
     t.integer "weight"
     t.integer "questionnaire_id"
+    t.integer "valuation"
   end
 
   add_index "questions", ["questionnaire_id"], :name => "fk_question_questionnaires"
