@@ -169,9 +169,21 @@ class ResponseController < ApplicationController
       questions = @questionnaire.questions
       if (@map.type.to_s == 'QuizResponseMap')
         questions.each_with_index do |question, k|
-         selected_option_id =  params[('option_'+k.to_s).to_sym]
-         selected_option = QuestionAdvice.find(selected_option_id)
-         score = Score.create(:response_id => @response.id, :question_id => questions[k.to_i].id, :score => selected_option.score, :comments => selected_option.advice)
+           if @questionnaire.quiz_question_type == "Multiple Choice - checked"
+             for checked_item_id in params[:checked_items][k.to_s]
+               print "Checked Item: " + checked_item_id
+               selected_option = QuestionAdvice.find(checked_items_id)
+               if selected_option.score == 0.to_s
+                 break
+               end
+             end
+           elsif @questionnaire.quiz_question_type == "Multiple Choice - radio"
+             selected_option_id =  params[('option_'+k.to_s).to_sym]
+             selected_option = QuestionAdvice.find(selected_option_id)
+           elsif @questionnaire.quiz_question_type == "Essay"
+           elsif @questionnaire.quiz_question_type == "True False"
+           end
+           score = Score.create(:response_id => @response.id, :question_id => questions[k.to_i].id, :score => selected_option.score, :comments => selected_option.advice)
         end
       else
         params[:responses].each_pair do |k,v|

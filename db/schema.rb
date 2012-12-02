@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121127221243) do
+ActiveRecord::Schema.define(:version => 20121202142651) do
 
   create_table "assignment_questionnaires", :force => true do |t|
     t.integer "assignment_id"
@@ -52,7 +52,6 @@ ActiveRecord::Schema.define(:version => 20121127221243) do
     t.string   "review_assignment_strategy"
     t.integer  "max_reviews_per_submission"
     t.integer  "review_topic_threshold",            :default => 0
-    t.boolean  "availability_flag"
     t.boolean  "require_quiz"
     t.integer  "num_quiz_questions",                :default => 0,     :null => false
   end
@@ -138,6 +137,12 @@ ActiveRecord::Schema.define(:version => 20121127221243) do
   add_index "due_dates", ["review_of_review_allowed_id"], :name => "fk_due_date_review_of_review_allowed"
   add_index "due_dates", ["submission_allowed_id"], :name => "fk_due_date_submission_allowed"
 
+  create_table "generic_quiz_questionnaires", :force => true do |t|
+    t.string   "QuizQuestionType"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "institutions", :force => true do |t|
     t.string "name", :default => "", :null => false
   end
@@ -152,15 +157,6 @@ ActiveRecord::Schema.define(:version => 20121127221243) do
   add_index "invitations", ["assignment_id"], :name => "fk_invitation_assignments"
   add_index "invitations", ["from_id"], :name => "fk_invitationfrom_users"
   add_index "invitations", ["to_id"], :name => "fk_invitationto_users"
-
-  create_table "join_team_requests", :force => true do |t|
-    t.integer  "participant_id"
-    t.integer  "team_id"
-    t.text     "comments"
-    t.string   "status",         :limit => 1
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "languages", :force => true do |t|
     t.string "name", :limit => 32
@@ -241,14 +237,6 @@ ActiveRecord::Schema.define(:version => 20121127221243) do
 
   add_index "question_advices", ["question_id"], :name => "fk_question_question_advices"
 
-  create_table "question_types", :force => true do |t|
-    t.string  "q_type",                     :null => false
-    t.string  "parameters"
-    t.integer "question_id", :default => 1, :null => false
-  end
-
-  add_index "question_types", ["question_id"], :name => "fk_question_type_question"
-
   create_table "questionnaires", :force => true do |t|
     t.string   "name",                :limit => 64
     t.integer  "instructor_id",                     :default => 0,     :null => false
@@ -260,8 +248,7 @@ ActiveRecord::Schema.define(:version => 20121127221243) do
     t.integer  "default_num_choices"
     t.string   "type"
     t.string   "display_type"
-    t.string   "section"
-    t.text     "instruction_loc"
+    t.text     "quiz_question_type"
   end
 
   create_table "questions", :force => true do |t|
@@ -290,7 +277,6 @@ ActiveRecord::Schema.define(:version => 20121127221243) do
     t.text     "additional_comment"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "version_num"
   end
 
   add_index "responses", ["map_id"], :name => "fk_response_response_map"
@@ -301,23 +287,6 @@ ActiveRecord::Schema.define(:version => 20121127221243) do
   end
 
   add_index "resubmission_times", ["participant_id"], :name => "fk_resubmission_times_participants"
-
-  create_table "review_comments", :force => true do |t|
-    t.integer  "review_file_id"
-    t.text     "comment_content"
-    t.integer  "reviewer_participant_id"
-    t.integer  "file_offset"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "review_files", :force => true do |t|
-    t.string   "filepath"
-    t.integer  "author_participant_id"
-    t.integer  "version_number"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "roles", :force => true do |t|
     t.string   "name",            :default => "", :null => false
@@ -467,8 +436,6 @@ ActiveRecord::Schema.define(:version => 20121127221243) do
     t.string  "name"
     t.integer "parent_id"
     t.string  "type"
-    t.text    "comments_for_advertisement"
-    t.boolean "advertise_for_partner"
   end
 
   create_table "teams_users", :force => true do |t|

@@ -1,11 +1,25 @@
 
 <div id="option_<%= i %>" style="padding:12px">
 <% k = 1 %>
-<% advice_list.each{ | item | %>
   <div>
-
-  <br><%= radio_button_tag 'option_'+ i.to_s, item.id, false %>&nbsp;<%=item.advice %>
+    <% if question_type == "Multiple Choice - checked" %>
+        <% advice_list.each{ | item | %>
+            <%= check_box_tag 'checked_items[][]', k, item.id -%>
+            &nbsp;<%=item.advice %>
+            <br>
+            <% k+=1 %>
+        <%}%>
+    <% elsif question_type == "Essay" %>
+    <% elsif question_type == "True False" %>
+        <br><%= radio_button_tag 'option_'+ i.to_s, item.id, false %>&nbsp;<%= True %>
+        <br><%= radio_button_tag 'option_'+ i.to_s, item.id, false %>&nbsp;<%= False %>
+    <% elsif question_type == "Multiple Choice - radio" %>
+        <% advice_list.each{ | item | %>
+            <br><%= radio_button_tag 'option_'+ i.to_s, item.id, false %>&nbsp;<%=item.advice %>
+            <% k+=1 %>
+        <%}%>
+    <% else %>
+        <br><h2>Question has no type!</h2>
+    <% end %>
   </div>
-  <% k+=1 %>
-<%}%>
 </div>

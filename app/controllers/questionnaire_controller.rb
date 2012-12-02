@@ -4,6 +4,11 @@ class QuestionnaireController < ApplicationController
   # Each Questionnaire contains zero or more questions (Question)
   # Generally a questionnaire is associated with an assignment (Assignment)  
   before_filter :authorize
+
+  def redirect_to(options = {}, response_status = {})
+    ::Rails.logger.error("Redirected by #{caller(1).first rescue "unknown"}")
+    super(options, response_status)
+  end
   
   # Create a clone of the given questionnaire, copying all associated
   # questions. The name and creator are updated.
@@ -177,6 +182,9 @@ class QuestionnaireController < ApplicationController
 
     @questionnaire = Object.const_get(params[:questionnaire][:type]).new(params[:questionnaire])
 
+    # TODO: check for Quiz Questionnaire?
+    @questionnaire.quiz_question_type = params[:question_type_var] #store the question type in QuizQuestionnaire
+
     if @questionnaire.type == "QuizQuestionnaire" #checking if it is a quiz questionnaire
       participant_id = params[:pid] #creating a local variable to send as parameter to submitted content if it is a quiz questionnaire
       @questionnaire.min_question_score = 0
@@ -220,6 +228,7 @@ class QuestionnaireController < ApplicationController
     @assignment_id = params[:aid]
 
     @questionnaire.quiz_question_type = params[:qtype]
+    @question_type = params[:qtype]
 
     if params[:qtype] == "Multiple Choice - radio"
       render :new_quiz_mcq_radio

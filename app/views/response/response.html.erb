@@ -70,7 +70,9 @@
                     <% end %>
                 <% else %>
                     <%if question.question_advices.size > 0%>
-                      <%= render :partial => 'options', :locals => {:i => i, :advice_list => question.question_advices} %>
+                      <!-- TODO: make sure question.questionnaire_id is of type QuizQuestionnaire? -->
+                      <%= render :partial => 'options', :locals => {:i => i, :advice_list => question.question_advices,
+                                        :question_type => QuizQuestionnaire.find_by_id(question.questionnaire_id).quiz_question_type} %>
                     <% else %>
                         <br/>
                     <% end %>
