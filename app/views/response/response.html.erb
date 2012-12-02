@@ -6,7 +6,7 @@
         topic_id = Participant.find_by_parent_id_and_user_id(@map.assignment.id,team_member).topic_id
     else%>
         <% topic_id = Participant.find(@map.contributor).topic_id%>
-  <%end%>  
+  <%end%>
   <%if !topic_id.nil?%>
   <% if (@map.type.to_s != 'QuizResponseMap') %>
   <h2>You are taking quiz for <%=SignUpTopic.find(topic_id).topic_name%></h2>
@@ -20,57 +20,71 @@
 <%= @map.show_review() %>
 
 <% form_tag :action => @next_action, :id => @modified_object do %>
-<% i = 0
-   @questions.each{
-    | question | %>
-    <%= i+1 %>. <%= question.txt %><BR/>
-    <% if @map.type.to_s!='QuizResponseMap' %>
-    <% if controller.action_name != 'new' and @review_scores[i] != nil and @review_scores[i].comments != nil %>  	    
-	    <% text = @review_scores[i].comments.gsub(/\"/,'&quot;').lstrip %>
-	    <textarea cols="70" rows="1" id="responses_<%=i%>_comments" name="responses[<%=i%>][comment]"  style="overflow:hidden;" onkeyup="checkRows(this)" ><%= text %></textarea>
-    <% else %>
-	    <textarea cols="70" rows="1" id="responses_<%=i%>_comments" name="responses[<%=i%>][comment]"  style="overflow:hidden;" onkeyup="checkRows(this)" ></textarea>
-    <% end %>
+    <table id="quiz_table">
+        <tr>
+            <td align=left width=300><strong>Questions</strong></td>
+            <td align=left width=150 style="text-align: center; word-wrap: normal;"><strong>Rate the difficulty of Questions</strong></td>
+        </tr>
+        <tr></tr>
 
-    <% if question.true_false? %>
-      <select id="responses_<%=i%>_score" name="responses[<%=i%>][score]">
-         <%if controller.action_name != 'new' %>
-           <option value="<%=@min%>" <%if @min==@review_scores[i].score%>selected="selected"<%end%> ><%=@min%></option>
-           <option value="<%=@max%>" <%if @max==@review_scores[i].score%>selected="selected"<%end%> ><%=@max%></option>    
-         <%else%>
-           <option value="<%=@min%>"><%=@min%></option>
-           <option value="<%=@max%>"><%=@max%></option> 
-         <%end%> 
-      </select>  
-  <% else %>
-      <select id="responses_<%=i%>_score" name="responses[<%=i%>][score]">
-          <% for j in @min..@max %>
-	         <%if controller.action_name != 'new'and @review_scores[i] != nil %>
-            	<option value="<%=j%>"<% if j==@review_scores[i].score%> selected="selected"<%end%> ><%=j%></option>
-             <%else%>
-		        <option value="<%=j%>" ><%=j%></option>
-	        <% end %>
-          <% end %>
-      </select>     
-  <% end %>
+        <% i = 0
+           @map.questionnaire.questions.each{
+            | question | %>
+        <tr>
+            <td>
+                <%= i+1 %>. <%= question.txt %><BR/><% question.average_difficulty_rating = 5 %>
+                <% if @map.type.to_s!='QuizResponseMap' %>
+                    <% if controller.action_name != 'new' and @review_scores[i] != nil and @review_scores[i].comments != nil %>
+                        <% text = @review_scores[i].comments.gsub(/\"/,'&quot;').lstrip %>
+                        <textarea cols="70" rows="1" id="responses_<%=i%>_comments" name="responses[<%=i%>][comment]"  style="overflow:hidden;" onkeyup="checkRows(this)" ><%= text %></textarea>
+                    <% else %>
+                        <textarea cols="70" rows="1" id="responses_<%=i%>_comments" name="responses[<%=i%>][comment]"  style="overflow:hidden;" onkeyup="checkRows(this)" ></textarea>
+                    <% end %>
 
-  <%if question.question_advices.size > 0%>
-      <%= render :partial => 'advice', :locals => {:i => i, :advice_list => question.question_advices} %>
-  <% else %>
-      <br/>
-  <% end %>
-  <% else %>
-    <%if question.question_advices.size > 0%>
-      <%= render :partial => 'options', :locals => {:i => i, :advice_list => question.question_advices} %>
-    <% else %>
-        <br/>
-    <% end %>
-  <% end %>
-  <BR/><BR/>
-  <% i+=1 
-   } %>
+                    <% if question.true_false? %>
+                      <select id="responses_<%=i%>_score" name="responses[<%=i%>][score]">
+                         <%if controller.action_name != 'new' %>
+                           <option value="<%=@min%>" <%if @min==@review_scores[i].score%>selected="selected"<%end%> ><%=@min%></option>
+                           <option value="<%=@max%>" <%if @max==@review_scores[i].score%>selected="selected"<%end%> ><%=@max%></option>
+                         <%else%>
+                           <option value="<%=@min%>"><%=@min%></option>
+                           <option value="<%=@max%>"><%=@max%></option>
+                         <%end%>
+                      </select>
+                    <% else %>
+                      <select id="responses_<%=i%>_score" name="responses[<%=i%>][score]">
+                          <% for j in @min..@max %>
+                             <%if controller.action_name != 'new'and @review_scores[i] != nil %>
+                                <option value="<%=j%>"<% if j==@review_scores[i].score%> selected="selected"<%end%> ><%=j%></option>
+                             <%else%>
+                                <option value="<%=j%>" ><%=j%></option>
+                            <% end %>
+                          <% end %>
+                      </select>
+                    <% end %>
 
-       
+                    <%if question.question_advices.size > 0%>
+                      <%= render :partial => 'advice', :locals => {:i => i, :advice_list => question.question_advices} %>
+                    <% else %>
+                      <br/>
+                    <% end %>
+                <% else %>
+                    <%if question.question_advices.size > 0%>
+                      <%= render :partial => 'options', :locals => {:i => i, :advice_list => question.question_advices} %>
+                    <% else %>
+                        <br/>
+                    <% end %>
+                <% end %>
+                <BR/><BR/>
+            </td>
+            <td style="text-align: center; vertical-align: top;">
+              <%= render :partial => 'select', :locals => {:i => i, :question_instance => question} %>
+            </td>
+        </tr>
+        <% i+=1
+         } %>
+    </table>
+
 <p>
     <% if (@map.type.to_s == 'QuizResponseMap') %>
         <label for="review_comments">Comments</label><BR/>
