@@ -356,6 +356,7 @@ class QuestionnaireController < ApplicationController
   end
 
   #method to save the choices associated with a question in a quiz to the database
+  #only for quiz questionnaire
   def save_choices(questionnaire_id)
 
      if params[:new_question] and params[:new_choices]
@@ -364,13 +365,13 @@ class QuestionnaireController < ApplicationController
        for question in questions
           for choice_key in params[:new_choices][i.to_s].keys
 
-           if choice_key == params[:new_question][i.to_s]["weight"]
-             score = 1
-           else
-             score = 0
-           end
-           q = QuestionAdvice.new(:score => score, :advice => params[:new_choices][i.to_s][choice_key], :question_id => question.id)
-           q.save
+             if params[:new_choices][i.to_s][choice_key]["weight"] == 1.to_s
+               score = 1
+             else
+               score = 0
+             end
+             q = QuestionAdvice.new(:score => score, :advice => params[:new_choices][i.to_s][choice_key]["txt"], :question_id => question.id)
+             q.save
           end
          i += 1
          question.weight = 1
