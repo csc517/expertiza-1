@@ -188,6 +188,21 @@ class ResponseController < ApplicationController
         ResponseHelper.compare_scores(@response, @questionnaire)
       end
       ScoreCache.update_cache(@res)
+      #add new rating and store the new average rating for quiz questions
+      i=0
+      @map.questionnaire.questions.each{
+          | question |
+        selected_difficulty_rating_first = params[:difficulty_rating][i.to_s]
+        total_number_of_ratings = question.number_of_ratings
+        total_value_of_rating = question.average_difficulty_rating.to_f * total_number_of_ratings.to_f
+        new_total_value_of_rating = total_value_of_rating.to_f + (selected_difficulty_rating_first.to_s).to_f
+        total_number_of_ratings +=1
+        question.number_of_ratings = total_number_of_ratings
+        question.average_difficulty_rating = new_total_value_of_rating.to_f / total_number_of_ratings.to_f
+        question.save
+        i+=1
+      }
+
       @map.save
       msg = "Your response was successfully saved."
     rescue

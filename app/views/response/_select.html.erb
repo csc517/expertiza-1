@@ -1,0 +1,5 @@
+<div id="select_<%= i %>" style="padding:12px">
+
+  <%= select_tag "difficulty_rating[#{i}]", options_for_select(Question::RATINGS, 'Very Easy') %>
+
+</div>
