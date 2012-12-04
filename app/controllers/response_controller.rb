@@ -187,9 +187,19 @@ class ResponseController < ApplicationController
            elsif @questionnaire.quiz_question_type == "True False"
              selected_option_id =  params[('option_'+k.to_s).to_sym]
              if selected_option_id == 1.to_s
-               selected_option = question.question_advices[0]
+               question.question_advices.each { |question_advice|
+                  if question_advice.advice == "TRUE"
+                    selected_option = question_advice
+                    break
+                  end
+               }
              else
-               selected_option = question.question_advices[1]
+               question.question_advices.each { |question_advice|
+                 if question_advice.advice == "FALSE"
+                   selected_option = question_advice
+                   break
+                 end
+               }
              end
            end
            score = Score.create(:response_id => @response.id, :question_id => questions[k.to_i].id, :score => selected_option.score, :comments => selected_option.advice)

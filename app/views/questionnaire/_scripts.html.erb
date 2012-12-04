@@ -113,9 +113,12 @@ function addQuestion(){
                 cid = i;
                 column = document.createElement("td");
                 if(i == 1)
-                    column.innerHTML = "<b>TRUE</b>";
+                    //column.innerHTML = "<b>TRUE</b>";
+                    column.innerHTML = "&nbsp;&nbsp;&nbsp;" + i + ".&nbsp; <input id=new_choices_" + cid + "_txt name=new_choices[" + id + "][" + cid + "][txt] size=40 type=text readonly value='TRUE' />";
                 else
-                    column.innerHTML = "<b>FALSE</b>";
+                    //column.innerHTML = "<b>FALSE</b>";
+                    column.innerHTML = "&nbsp;&nbsp;&nbsp;" + i + ".&nbsp; <input id=new_choices_" + cid + "_txt name=new_choices[" + id + "][" + cid + "][txt] size=40 type=text readonly value='FALSE' />";
+
                 row_for_choices.appendChild(column);
 
                 column = document.createElement("td");

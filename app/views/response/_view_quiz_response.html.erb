@@ -7,17 +7,23 @@
       <div id="option_<%= quiz_id %>_<%= i %>" style="padding:12px">
       <% k = 1 %>
       <% answer = Score.find_all_by_response_id_and_question_id(response.id,question.id) %>
-      <% advice_list.each{ | item | %>
-        <div>
-          <% if (item.advice == answer[0].comments)%>
-          <br><%= radio_button_tag 'option_' + quiz_id.to_s + i.to_s, item.id, true, :disabled => true %>&nbsp;<%=item.advice %>
-          <% else %>
-          <br><%= radio_button_tag 'option_' + quiz_id.to_s + i.to_s, item.id, false, :disabled => true %>&nbsp;<%=item.advice %>
-          <% end %>
+      <% if QuizQuestionnaire.find(question.questionnaire_id).quiz_question_type == "Essay" %>
+        <br>
+            <%= answer[0].comments %>
+        <br>
+      <% else %>
+          <% advice_list.each{ | item | %>
+            <div>
+              <% if (item.advice == answer[0].comments)%>
+              <br><%= radio_button_tag 'option_' + quiz_id.to_s + i.to_s, item.id, true, :disabled => true %>&nbsp;<%=item.advice %>
+              <% else %>
+              <br><%= radio_button_tag 'option_' + quiz_id.to_s + i.to_s, item.id, false, :disabled => true %>&nbsp;<%=item.advice %>
+              <% end %>
 
-        </div>
-        <% k+=1 %>
-      <%}%>
+            </div>
+            <% k+=1 %>
+          <%}%>
+      <% end %>
 </div>
     <% else %>
         <br/>
