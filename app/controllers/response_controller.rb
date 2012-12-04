@@ -170,9 +170,9 @@ class ResponseController < ApplicationController
       if (@map.type.to_s == 'QuizResponseMap')
         questions.each_with_index do |question, k|
            if @questionnaire.quiz_question_type == "Multiple Choice - checked"
-             for checked_item_id in params[:checked_items][k.to_s]
-               print "Checked Item: " + checked_item_id
-               selected_option = QuestionAdvice.find(checked_items_id)
+             for selected_item in params[('checked_items_'+question.id.to_s).to_sym]
+               print "Selected Item: " + selected_item
+               selected_option = QuestionAdvice.find(selected_item)
                if selected_option.score == 0.to_s
                  break
                end
@@ -181,7 +181,16 @@ class ResponseController < ApplicationController
              selected_option_id =  params[('option_'+k.to_s).to_sym]
              selected_option = QuestionAdvice.find(selected_option_id)
            elsif @questionnaire.quiz_question_type == "Essay"
+             selected_option = QuestionAdvice.new
+             selected_option.score = 1
+             selected_option.advice = params[('question_'+k.to_s).to_sym]
            elsif @questionnaire.quiz_question_type == "True False"
+             selected_option_id =  params[('option_'+k.to_s).to_sym]
+             if selected_option_id == 1.to_s
+               selected_option = question.question_advices[0]
+             else
+               selected_option = question.question_advices[1]
+             end
            end
            score = Score.create(:response_id => @response.id, :question_id => questions[k.to_i].id, :score => selected_option.score, :comments => selected_option.advice)
         end

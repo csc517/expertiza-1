@@ -89,12 +89,12 @@ function addQuestion(){
                 row_for_choices.appendChild(column);
             }
         <% elsif @questionnaire.quiz_question_type == "Essay" %>   // if the question is essay
-            for(i = 1; i < 5; i++) {
+            for(i = 1; i < 2; i++) {
                 var row_for_choices = table.insertRow(-1);
                 cid = i;
-                column = document.createElement("td");
-                column.innerHTML = "&nbsp;&nbsp;&nbsp;" + i + ".&nbsp; <input id=new_choices_" + cid + "_txt name=new_choices[" + id + "][" + cid + "][txt] size=40     type=text/>";
-                row_for_choices.appendChild(column);
+                //column = document.createElement("td");
+                //column.innerHTML = "&nbsp;&nbsp;&nbsp;" + i + ".&nbsp; <input id=new_choices_" + cid + "_txt name=new_choices[" + id + "][" + cid + "][txt] size=40     type=text/>";
+                //row_for_choices.appendChild(column);
 
                 column = document.createElement("td");
                 weights = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id=new_choices_" + cid + "_weight name=new_choices[" + id + "][" + cid + "][weight]>";
@@ -108,11 +108,14 @@ function addQuestion(){
                 row_for_choices.appendChild(column);
             }
         <% elsif @questionnaire.quiz_question_type == "True False" %>   // if the question is true/false
-            for(i = 1; i < 5; i++) {
+            for(i = 1; i <3; i++) {
                 var row_for_choices = table.insertRow(-1);
                 cid = i;
                 column = document.createElement("td");
-                column.innerHTML = "&nbsp;&nbsp;&nbsp;" + i + ".&nbsp; <input id=new_choices_" + cid + "_txt name=new_choices[" + id + "][" + cid + "][txt] size=40     type=text/>";
+                if(i == 1)
+                    column.innerHTML = "<b>TRUE</b>";
+                else
+                    column.innerHTML = "<b>FALSE</b>";
                 row_for_choices.appendChild(column);
 
                 column = document.createElement("td");

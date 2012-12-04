@@ -373,7 +373,7 @@ class QuestionnaireController < ApplicationController
        i = 1
        for question in questions
           for choice_key in params[:new_choices][i.to_s].keys
-
+            print choice_key
              if params[:new_choices][i.to_s][choice_key]["weight"] == 1.to_s
                score = 1
              else
