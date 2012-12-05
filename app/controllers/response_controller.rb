@@ -173,9 +173,10 @@ class ResponseController < ApplicationController
              for selected_item in params[('checked_items_'+question.id.to_s).to_sym]
                print "Selected Item: " + selected_item
                selected_option = QuestionAdvice.find(selected_item)
-               if selected_option.score == 0.to_s
-                 break
-               end
+               score = Score.create(:response_id => @response.id, :question_id => questions[k.to_i].id, :score => selected_option.score, :comments => selected_option.advice)
+               #if selected_option.score == 0.to_s
+               #  break
+               #end
              end
            elsif @questionnaire.quiz_question_type == "Multiple Choice - radio"
              selected_option_id =  params[('option_'+k.to_s).to_sym]
@@ -202,7 +203,9 @@ class ResponseController < ApplicationController
                }
              end
            end
-           score = Score.create(:response_id => @response.id, :question_id => questions[k.to_i].id, :score => selected_option.score, :comments => selected_option.advice)
+           if @questionnaire.quiz_question_type != "Multiple Choice - checked"
+              score = Score.create(:response_id => @response.id, :question_id => questions[k.to_i].id, :score => selected_option.score, :comments => selected_option.advice)
+           end
         end
       else
         params[:responses].each_pair do |k,v|
