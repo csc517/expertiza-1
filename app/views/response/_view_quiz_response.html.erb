@@ -2,7 +2,7 @@
 <% i = 0 %>
 <% questions.each{ | question | %>
     <%= i+1 %>. <%= question.txt %><BR/>
-    <%if question.question_advices.size > 0 %>
+    <%if question.question_advices.size >= 0 %>
       <% advice_list = question.question_advices %>
       <div id="option_<%= quiz_id %>_<%= i %>" style="padding:12px">
       <% k = 1 %>

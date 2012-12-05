@@ -184,7 +184,7 @@ class ResponseController < ApplicationController
            elsif @questionnaire.quiz_question_type == "Essay"
              selected_option = QuestionAdvice.new
              selected_option.score = 1
-             selected_option.advice = params[('question_'+k.to_s).to_sym]
+             selected_option.advice = params[('question_'+ question.id.to_s).to_sym]
            elsif @questionnaire.quiz_question_type == "True False"
              selected_option_id =  params[('option_'+k.to_s).to_sym]
              if selected_option_id == 1.to_s
