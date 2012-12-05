@@ -3,7 +3,7 @@
 <% questions.each{ | question | %>
     <%= i+1 %>. <%= question.txt %><BR/>
     <%if question.question_advices.size > 0 %>
-      <% advice_list = question.question_advices.shuffle %>
+      <% advice_list = question.question_advices %>
       <div id="option_<%= quiz_id %>_<%= i %>" style="padding:12px">
       <% k = 1 %>
       <% answer = Score.find_all_by_response_id_and_question_id(response.id,question.id) %>
@@ -11,6 +11,30 @@
         <br>
             <%= answer[0].comments %>
         <br>
+      <% elsif QuizQuestionnaire.find(question.questionnaire_id).quiz_question_type == "Multiple Choice - checked" %>
+          <% shown = Array.new %>
+          <% advice_list.size.times do %>
+              <%  shown.push 0 %>
+          <% end %>
+          <% advice_list.each{ | item | %>
+            <div>
+              <% j = answer.size %>
+              <% while ( j > 0 ) %>
+                <% if (shown[j - 1] != 1) %>
+                    <% if (item.advice == answer[j-1].comments) %>
+                        <br><%= check_box_tag("display", 'option_' + quiz_id.to_s + i.to_s, checked = true, :disabled => true) %>&nbsp; <%= item.advice %>
+                        <% shown[j-1] = 1 %>
+                        <% break %>
+                    <% end %>
+                <% end %>
+                <% j-= 1 %>
+              <% end %>
+              <% if (shown[j - 1] != 1) %>
+                  <br><%= check_box_tag("display", 'option_' + quiz_id.to_s + i.to_s, checked = false, :disabled => true) %>&nbsp;<%= item.advice %>
+              <% end %>
+            </div>
+            <% k+=1 %>
+          <%}%>
       <% else %>
           <% advice_list.each{ | item | %>
             <div>
