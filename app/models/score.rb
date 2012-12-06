@@ -68,7 +68,17 @@ class Score < ActiveRecord::Base
     questions.each{
       | question |
       item = Score.find_by_response_id_and_question_id(response.id, question.id)
-      if item != nil
+      if item != nil and QuizQuestionnaire.find(question.questionnaire_id).quiz_question_type = "Multiple Choice - checked"
+        item = Score.find_all_by_response_id_and_question_id(response.id, question.id)
+        local_score = 1
+        for it in item
+          if it.score == 0
+            local_score = 0
+            break
+          end
+        end
+        weighted_score += local_score * question.weight
+      elsif item != nil
         weighted_score += item.score * question.weight
       end      
       sum_of_weights += question.weight
