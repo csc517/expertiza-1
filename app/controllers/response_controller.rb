@@ -215,6 +215,7 @@ class ResponseController < ApplicationController
     rescue
       @response.delete
       error_msg = "Your response was not saved. Cause: " + $!
+      print error_msg + "\n"
     end
 
     begin
@@ -226,7 +227,11 @@ class ResponseController < ApplicationController
       i=0
       @map.questionnaire.questions.each{
           | question |
-        selected_difficulty_rating_first = params[:difficulty_rating][i.to_s]
+        if nil == params[:difficulty_rating]
+          selected_difficulty_rating_first = 1 #params[:difficulty_rating][i.to_s]
+        else
+          selected_difficulty_rating_first = params[:difficulty_rating][i.to_s]
+        end
         total_number_of_ratings = question.number_of_ratings
         total_value_of_rating = question.average_difficulty_rating.to_f * total_number_of_ratings.to_f
         new_total_value_of_rating = total_value_of_rating.to_f + (selected_difficulty_rating_first.to_s).to_f
@@ -239,9 +244,12 @@ class ResponseController < ApplicationController
 
       @map.save
       msg = "Your response was successfully saved."
-    rescue
+    rescue => e
       @response.delete
       error_msg = "Your response was not saved. Cause: " + $!
+      print error_msg + "\n"
+      puts e.inspect
+      puts e.backtrace
     end
     redirect_to :controller => 'response', :action => 'saving', :id => @map.id, :return => params[:return], :msg => msg, :error_msg => error_msg
   end      

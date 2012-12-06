@@ -85,7 +85,8 @@ class QuestionnaireControllerTest < ActionController::TestCase
     new_q_choices["2"] = {"1" => "Answer 1 for Q1", "2" => "Answer 2 for Q2"}
 
     post :create_quiz_questionnaire, :model=>"QuizQuestionnaire", :pid=>@Participant, :aid=> @Assignment,
-                                      :questionnaire=>q_questionnaire, :new_question=>new_q_question, :new_choices=>new_q_choices
+         :question_type_var=>"Multiple Choice - radio", :questionnaire=>q_questionnaire, :new_question=>new_q_question,
+         :new_choices=>new_q_choices
 
     assert_not_nil(Questionnaire.find(:first, :conditions => ["name = ?", "testquiz"]))
     assert(questions_count + 2 == Question.count)
