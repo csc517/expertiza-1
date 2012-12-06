@@ -3,28 +3,32 @@
 <!--[form:questionnaire]-->
 <table>
 	<tr>
-		<td valign="top"><label for="questionnaire_name">Name:</label>	</td>
-		<td>
-			<%= text_field 'questionnaire', 'name'  %>
-			<%= hidden_field 'questionnaire', 'id' %>
-			<%= hidden_field 'questionnaire', 'type' %>
-		</td>		
+        <td valign="top"><label for="questionnaire_name">Name:</label>	</td>
+        <td>
+            <%= text_field 'questionnaire', 'name'  %>
+            <%= hidden_field 'questionnaire', 'id' %>
+            <%= hidden_field 'questionnaire', 'type' %>
+        </td>
 	</tr>
 </table>
 
 <% if @questionnaire.type == 'QuizQuestionnaire' %>        <!--handle a questionnaire differently if it is a quiz-->
     <table id="questions_table">
-        <tr>
-            <td colspan=2 style="padding-bottom: 5pt"><strong>Questions</strong>
-        </tr>
-        <tr>
-            <td align=center width=300>Question</td>
-            <td align=left>Correct Answer</td>
-        </tr>
+        <% if $disp_flag != 1 %>
+            <tr>
+                <td colspan=2 style="padding-bottom: 5pt"><strong>Questions</strong>
+            </tr>
+            <tr>
+                <td align=center width=300>Question</td>
+                <td align=left>Correct Answer</td>
+            </tr>
+        <% end %>
 
     <% for @question in @questionnaire.questions %>
 	  <tr>
-	    <td><%= text_field "question[]", 'txt', :size=>70 %></td>
+        <% if $disp_flag != 1 %>
+	        <td><%= text_field "question[]", 'txt', :size=>70 %></td>
+        <% end %>
         <% i=1
           @question_advices = QuestionAdvice.find_all_by_question_id(@question.id)
           for @question_advice in @question_advices

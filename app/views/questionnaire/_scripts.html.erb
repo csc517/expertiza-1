@@ -57,7 +57,7 @@ function addQuestion(){
                 column = document.createElement("td");
                 column.innerHTML = "&nbsp;&nbsp;&nbsp;" + i + ".&nbsp; <input id=new_choices_" + cid + "_txt name=new_choices[" + id + "][" + cid + "][txt] size=40     type=text/>";
                 row_for_choices.appendChild(column);
-
+            }
                 column = document.createElement("td");
 	            weights = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id=new_choices_" + cid + "_weight name=new_choices[" + id + "][" + cid + "][weight]>";
                 //Listing the options for a quiz questionnaire
@@ -68,7 +68,6 @@ function addQuestion(){
                 weights = weights + "</select>";
                 column.innerHTML = weights;
                 row_for_choices.appendChild(column);
-            }
         <% elsif @questionnaire.quiz_question_type == "Multiple Choice - checked" %>   // if the question is multiple choice - checked
             for(i = 1; i < 5; i++) {
                 var row_for_choices = table.insertRow(-1);
@@ -80,7 +79,7 @@ function addQuestion(){
                 column = document.createElement("td");
                 weights = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id=new_choices_" + cid + "_weight name=new_choices[" + id + "][" + cid + "][weight]>";
                 //Listing the options for a quiz questionnaire
-                <% for weight in Question::ANSWERS %>
+                <% for weight in Question::ANSWERS_MCQ_CHECKED %>
                     <%= "weights += '<option value=" + weight[1].to_s + ">" + weight[0].to_s + "</option>';"%>
                 <% end %>
 
@@ -89,7 +88,12 @@ function addQuestion(){
                 row_for_choices.appendChild(column);
             }
         <% elsif @questionnaire.quiz_question_type == "Essay" %>   // if the question is essay
-            for(i = 1; i < 2; i++) {
+            column = document.createElement("td");
+            cid = 1;
+            column.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp; <input id=new_choices_" + cid + "_txt name=new_choices[" + id + "][" + cid + "][txt] size=40 type=text/>";
+            row.appendChild(column);
+
+            for(i = 1; i < 1; i++) {
                 var row_for_choices = table.insertRow(-1);
                 cid = i;
                 //column = document.createElement("td");
@@ -117,7 +121,7 @@ function addQuestion(){
                     column.innerHTML = "&nbsp;&nbsp;&nbsp;" + i + ".&nbsp; <input id=new_choices_" + cid + "_txt name=new_choices[" + id + "][" + cid + "][txt] size=40 type=text readonly value='FALSE' />";
 
                 row_for_choices.appendChild(column);
-
+            }
                 column = document.createElement("td");
                 weights = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id=new_choices_" + cid + "_weight name=new_choices[" + id + "][" + cid + "][weight]>";
                 //Listing the options for a quiz questionnaire
@@ -128,7 +132,6 @@ function addQuestion(){
                 weights = weights + "</select>";
                 column.innerHTML = weights;
                 row_for_choices.appendChild(column);
-            }
         <% else %> //default
             for(i = 1; i < 5; i++) {
                 var row_for_choices = table.insertRow(-1);
@@ -136,7 +139,7 @@ function addQuestion(){
                 column = document.createElement("td");
                 column.innerHTML = "&nbsp;&nbsp;&nbsp;" + i + ".&nbsp; <input id=new_choices_" + cid + "_txt name=new_choices[" + id + "][" + cid + "][txt] size=40     type=text/>";
                 row_for_choices.appendChild(column);
-
+            }
                 column = document.createElement("td");
                 weights = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id=new_choices_" + cid + "_weight name=new_choices[" + id + "][" + cid + "][weight]>";
                 //Listing the options for a quiz questionnaire
@@ -147,7 +150,6 @@ function addQuestion(){
                 weights = weights + "</select>";
                 column.innerHTML = weights;
                 row_for_choices.appendChild(column);
-            }
         <% end %>   //end of if @questionnaire.quiz_question_type
     <% else %>  //not quiz questionnaire
 	    column = document.createElement("td");

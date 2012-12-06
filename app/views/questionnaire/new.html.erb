@@ -2,7 +2,9 @@
 <h1>New <%= @questionnaire.display_type %></h1>
 <% if @questionnaire.type == "QuizQuestionnaire" %>    <!--handle a questionnaire differently if it is a quiz-->
   <% form_tag :action => 'create_quiz_type', :pid => @participant_id, :aid => @assignment_id do %>
+    <% $disp_flag = 1 %>
   	<%= render :partial => 'questionnaire' %>
+    <% $disp_flag = 0 %>
     <%= radio_button_tag(:qtype, "Multiple Choice - radio") %> Multiple Choice - radio <br>
     <%= radio_button_tag(:qtype, "True False") %> True False <br>
     <%= radio_button_tag(:qtype, "Essay") %> Essay <br>

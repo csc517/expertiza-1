@@ -17,6 +17,7 @@ class Question < ActiveRecord::Base
     WEIGHTS = [['1',1],['2',2],['3',3],['4',4],['5',5]]
     ANSWERS = [['1',1],['2',2],['3',3],['4',4]] #a hash used while creating a quiz questionnaire
     ANSWERS_TRUE_FALSE = [['1',1],['2',2]]
+    ANSWERS_MCQ_CHECKED = [['1',1],['0',2]]
     RATINGS = [['Very Easy',1],['Easy',2],['Medium',3],['Difficult',4],['Very Difficult',5]]
     attr_accessor :checked
     
